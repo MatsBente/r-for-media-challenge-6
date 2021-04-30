@@ -8,15 +8,13 @@ library(ggrepel)
 # Stelle den mitgegebenen Plot nach. Alle Daten dafür habt Ihr ja vorliegen!
 
 # load df with all palamentarians  in the German BT
-# bundestag_2019 <- …
 
 # load their Nebentätigkeiten
-# nebeneinkuenfte <- …
 
-#data
+#data load
 
 bundestag_2019 <- readRDS("data/bundestag_2019.rds")
-abgeordnetenwatch <- read_csv("data/data-ROsix.csv") %>% 
+nebeneinkuenfte <- read_csv("data/data-ROsix.csv") %>% 
   janitor::clean_names() %>% 
   mutate(
     name = str_split(name, ", ") %>%
@@ -26,8 +24,8 @@ abgeordnetenwatch <- read_csv("data/data-ROsix.csv") %>%
   )%>% 
   select(-nebentatigkeiten, -partei)
 
-Abgeordneten_full <- bundestag_2019 %>% 
-  left_join(abgeordnetenwatch)
+data <-Abgeordneten_full <- bundestag_2019 %>% 
+  left_join(nebeneinkuenfte)
 
 partei_farben <- list(
   "CDU" = "black",
@@ -46,7 +44,7 @@ partei_farben <- list(
 #plot
 options(scipen = 999) # e zu ganzen Zahlen
 
-Abgeordneten_full %>% 
+data %>% 
   ggplot(
     aes(
       x = lebensdaten,
@@ -66,11 +64,10 @@ Abgeordneten_full %>%
     size = "Einkünfte",
     color = "Partei"
   )+
-  geom_label_repel(data = subset(Abgeordneten_full, mindest_einkunfte_in_euro > 469999)
+  geom_label_repel(data = subset(data, mindest_einkunfte_in_euro > 469999)
   )
 
-Abgeordneten_full
-# data <- …
+data
 
-# ggplot(data) + …
+
   
